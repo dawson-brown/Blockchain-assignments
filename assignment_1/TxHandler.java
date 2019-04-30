@@ -1,3 +1,7 @@
+/**
+ * Public Github repo found here: https://github.com/dawson-brown/Blockchain-assignments
+ */
+
 import java.util.Arrays;
 import java.util.HashSet;
 
