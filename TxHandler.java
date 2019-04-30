@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class TxHandler {
@@ -61,7 +62,25 @@ public class TxHandler {
      * and updating the current UTXO pool as appropriate.
      */
     public Transaction[] handleTxs​(Transaction[] possibleTxs){
-        return possibleTxs;
+
+        Transaction[] validTxs = new Transaction[possibleTxs.length];
+        int i=0;
+
+        for (Transaction tx: possibleTxs){
+            if (isValidTx​(tx)){
+                for (Transaction.Input in: tx.getInputs()) {
+                    UTXO utxo = new UTXO(in.prevTxHash, in.outputIndex);
+                    currentUPool.removeUTXO(utxo);
+                }
+                for (int j=0; j<tx.numOutputs(); j++){
+                    Transaction.Output op = tx.getOutput(j);
+                    currentUPool.addUTXO(new UTXO(tx.getHash(), j) ,op);
+                }
+                validTxs[i++] = tx;
+            }
+        }
+
+        return Arrays.copyOfRange(validTxs, 0, i);
     }
 
 }
